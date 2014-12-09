@@ -230,6 +230,12 @@ public class AddFence
 
 		IntentFilter filter = new IntentFilter(PROX_ALERT_INTENT);
 		context.registerReceiver(new ProximityIntentReceiver(), filter);
+		
+		if(entering)
+		{
+			Toast.makeText(context, "Prohibited location added", Toast.LENGTH_LONG).show();
+
+		}
 
 	}
 

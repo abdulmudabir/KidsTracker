@@ -1,14 +1,17 @@
 package com.pervasive.project.kidsTracker;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,9 +26,12 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -44,9 +50,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 */
 	ViewPager mViewPager;
 
-	private static EditText fordate, startTime, endTime, location;	// local instances to items in "Enter Schedule" tab
-	private static EditText prohibArea;
-	//	private static String physAddr;
+	private static EditText fordate, startTime, endTime, location1, location2;	// local instances to items in "Enter Schedule" tab
+	private static EditText prohibArea1;
+	private static EditText prohibArea2;
 	private static TextView physAddr_tv;
 	private int id=0;
 	private static Context mainCon;
@@ -199,6 +205,61 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		private int uid=0;
 
+		Calendar popCalendar = Calendar.getInstance();
+
+		// callback function for DatePickerDialog 
+		DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+			private void updateLabel() {
+				String dateformat = "MM/dd/yyyy";
+				SimpleDateFormat sdf = new SimpleDateFormat(dateformat, Locale.US);
+
+				fordate.setText(sdf.format(popCalendar.getTime()));
+			}
+
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				popCalendar.set(Calendar.YEAR, year);
+				popCalendar.set(Calendar.MONTH, monthOfYear);
+				popCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				updateLabel();
+			}
+		};
+
+		// callback functions for TimePickerDialogs
+		TimePickerDialog.OnTimeSetListener stime = new TimePickerDialog.OnTimeSetListener() {
+
+			private void updateLabel() {
+				String timeformat = "HH:mm";
+				SimpleDateFormat sdf = new SimpleDateFormat(timeformat);
+				startTime.setText(sdf.format(popCalendar.getTime()));
+			}
+
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				popCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				popCalendar.set(Calendar.MINUTE, minute);
+				updateLabel();
+			}
+		};
+
+		TimePickerDialog.OnTimeSetListener etime = new TimePickerDialog.OnTimeSetListener() {
+
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				popCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				popCalendar.set(Calendar.MINUTE, minute);
+				updateLabel();
+			}
+
+			private void updateLabel() {
+				String timeformat = "HH:mm";
+				SimpleDateFormat sdf = new SimpleDateFormat(timeformat);
+				endTime.setText(sdf.format(popCalendar.getTime()));
+			}
+		};
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -209,7 +270,34 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			fordate = (EditText) rootView.findViewById(R.id.selDate);
 			startTime = (EditText) rootView.findViewById(R.id.startTime);
 			endTime = (EditText) rootView.findViewById(R.id.endTime);
-			location = (EditText) rootView.findViewById(R.id.loc);
+			location1 = (EditText) rootView.findViewById(R.id.addr1);
+			location2 = (EditText) rootView.findViewById(R.id.cityStateCode);
+
+			// add an on-click listener to 'Select Date' edittext
+			fordate.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					new DatePickerDialog(v.getContext(), date, popCalendar.get(Calendar.YEAR), popCalendar.get(Calendar.MONTH), popCalendar.get(Calendar.DAY_OF_MONTH)).show();
+				}
+			});
+
+			// add an on-click listener to startTime edittext 
+			startTime.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					new TimePickerDialog(v.getContext(), stime, popCalendar.get(Calendar.HOUR_OF_DAY), popCalendar.get(Calendar.MINUTE), true).show();
+				}
+			});
+
+			endTime.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					new TimePickerDialog(v.getContext(), etime, popCalendar.get(Calendar.HOUR_OF_DAY), popCalendar.get(Calendar.MINUTE), true).show();
+				}
+			});
 
 			rootView.findViewById(R.id.submitBtn)
 			.setOnClickListener(new View.OnClickListener() {
@@ -217,69 +305,82 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				public void onClick(View view) {
 					String dateStr = fordate.getText().toString();
 					String startTimeStr = startTime.getText().toString();
+					startTimeStr+=":00";
 					String endTimeStr = endTime.getText().toString();
-					String locationStr = location.getText().toString();
+					String location1Str = location1.getText().toString();
+					String location2Str = location2.getText().toString();
 					Log.d("startDate", dateStr);
+					String locationStr=location1Str+" "+location2Str;
 
-					Date time2=null;
-					//format the date of the form 12/04/2014 13:52:00
-					try
+					if(dateStr.equals("")||startTimeStr.equals("")||endTimeStr.equals("")||locationStr.equals("") )
 					{
-						dateStr+=" "+startTimeStr;
-						SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-						time2=format.parse(dateStr);
+						Toast.makeText(view.getContext(), "Please fill in all the data", Toast.LENGTH_LONG).show();
 					}
-					catch(Exception e)
+					else
 					{
-						String esd = e.getMessage();
-						Log.d("error", e.getMessage());
-					}
 
 
-					Geocoder geocoder = new Geocoder(view.getContext(), Locale.getDefault());
 
-					List<Address> address;
-
-					try {
-						address=geocoder.getFromLocationName(locationStr, 5);
-
-						Address loc=address.get(0);
-
-						double lat=loc.getLatitude();
-						double longit=loc.getLongitude();
-						Log.d(
-
-								"lat", " "+lat+" "+longit);
-						AddFence fenceObj = new AddFence(view.getContext());
-						fenceObj.saveDataInDatabase(locationStr, lat, longit, 1, dateStr, startTimeStr, endTimeStr);
-						//fenceObj.saveCoordinatesInPreferences((float)lat, (float) longit);
+						Date time2=null;
+						//format the date of the form 12/04/2014 13:52:00
+						try
+						{
+							dateStr+=" "+startTimeStr;
+							SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+							time2=format.parse(dateStr);
+						}
+						catch(Exception e)
+						{
+							String esd = e.getMessage();
+							Log.d("error", e.getMessage());
+						}
 
 
-						//add an alarm
-						Intent intentAlarm = new Intent(view.getContext(), AlarmReciever.class);
-						Bundle extras=new Bundle();
-						int id=(int)System.nanoTime();
-						extras.putString("id", String.valueOf(id));
-						extras.putString("latitude", String.valueOf(lat));
-						extras.putString("longitude", String.valueOf(longit));
-						extras.putString("entering", String.valueOf(false));
-						extras.putString("address", loc.getAddressLine(0));
-						intentAlarm.putExtras(extras);
+						Geocoder geocoder = new Geocoder(view.getContext(), Locale.getDefault());
 
-						// create the object
-						AlarmManager alarmManager = (AlarmManager) view.getContext().getSystemService(Context.ALARM_SERVICE);
+						List<Address> address;
 
-						//set the alarm for particular time
-						alarmManager.set(AlarmManager.RTC_WAKEUP,time2.getTime(), PendingIntent.getBroadcast(view.getContext(),id,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-						Toast.makeText(view.getContext(), "Alarm Scheduled for Tommrrow", Toast.LENGTH_LONG).show();
+						try {
+							address=geocoder.getFromLocationName(locationStr, 5);
+
+							Address loc=address.get(0);
+
+							double lat=loc.getLatitude();
+							double longit=loc.getLongitude();
+							Log.d(
+
+									"lat", " "+lat+" "+longit);
+							AddFence fenceObj = new AddFence(view.getContext());
+							fenceObj.saveDataInDatabase(locationStr, lat, longit, 1, dateStr, startTimeStr, endTimeStr);
+							//fenceObj.saveCoordinatesInPreferences((float)lat, (float) longit);
 
 
-						//fenceObj.addProximityAlert(lat, longit,false,loc.getAddressLine(0));
-					} 
-					catch(Exception e) {
-						String esd = e.getMessage();
-						Log.d("error", e.getMessage());
+							//add an alarm
+							Intent intentAlarm = new Intent(view.getContext(), AlarmReciever.class);
+							Bundle extras=new Bundle();
+							int id=(int)System.nanoTime();
+							extras.putString("id", String.valueOf(id));
+							extras.putString("latitude", String.valueOf(lat));
+							extras.putString("longitude", String.valueOf(longit));
+							extras.putString("entering", String.valueOf(false));
+							extras.putString("address", loc.getAddressLine(0));
+							intentAlarm.putExtras(extras);
 
+							// create the object
+							AlarmManager alarmManager = (AlarmManager) view.getContext().getSystemService(Context.ALARM_SERVICE);
+
+							//set the alarm for particular time
+							alarmManager.set(AlarmManager.RTC_WAKEUP,time2.getTime(), PendingIntent.getBroadcast(view.getContext(),id,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+							Toast.makeText(view.getContext(), "Location saved", Toast.LENGTH_LONG).show();
+
+
+							//fenceObj.addProximityAlert(lat, longit,false,loc.getAddressLine(0));
+						} 
+						catch(Exception e) {
+							String esd = e.getMessage();
+							Log.d("error", e.getMessage());
+
+						}
 					}
 				}
 			});
@@ -297,39 +398,55 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 			View rootView = inflater.inflate(R.layout.fragment_section_prohibited, container, false);
 
-			prohibArea = (EditText) rootView.findViewById(R.id.prohib_et);
+			prohibArea1 = (EditText) rootView.findViewById(R.id.prohib_et1);
+			prohibArea2 = (EditText) rootView.findViewById(R.id.prohib_et2);
+
 
 			rootView.findViewById(R.id.submitAreaBtn)
 			.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					String prohibAreaStr = prohibArea.getText().toString();
-					Log.d("prohib area string value", prohibAreaStr);
 
-					Geocoder geocoder = new Geocoder(view.getContext(), Locale.getDefault());
 
-					List<Address> address;
+					String prohibAreaStr1 = prohibArea1.getText().toString();
+					String prohibAreaStr2 = prohibArea2.getText().toString();
 
-					try {
-						address = geocoder.getFromLocationName(prohibAreaStr, 5);
-
-						Address loc=address.get(0);
-
-						double lat=loc.getLatitude();
-						double longit=loc.getLongitude();
-						Log.d(
-
-								"lat", " "+lat+" "+longit);
-						AddFence fenceObj = new AddFence(view.getContext());
-						//fenceObj.saveCoordinatesInPreferences((float)lat, (float) longit);
-						AddFence proibitedObj = new AddFence(MainActivity.getContext());
-						proibitedObj.addProximityAlert(lat, longit, true, prohibAreaStr);
-						//fenceObj.addProximityAlert(lat, longit);
+					if(prohibAreaStr1.equals("")||prohibAreaStr2.equals("") )
+					{
+						Toast.makeText(view.getContext(), "Please fill in all the data", Toast.LENGTH_LONG).show();
 					}
+					else
+					{
 
-					catch(Exception e) {
-						String esd = e.getMessage();
-						Log.d("error", e.getMessage());
+						String prohibAreaStr=prohibAreaStr1+" "+prohibAreaStr2;
+
+						Log.d("prohib area string value", prohibAreaStr);
+
+						Geocoder geocoder = new Geocoder(view.getContext(), Locale.getDefault());
+
+						List<Address> address;
+
+						try {
+							address = geocoder.getFromLocationName(prohibAreaStr, 5);
+
+							Address loc=address.get(0);
+
+							double lat=loc.getLatitude();
+							double longit=loc.getLongitude();
+							Log.d(
+
+									"lat", " "+lat+" "+longit);
+							AddFence fenceObj = new AddFence(view.getContext());
+							//fenceObj.saveCoordinatesInPreferences((float)lat, (float) longit);
+							AddFence proibitedObj = new AddFence(MainActivity.getContext());
+							proibitedObj.addProximityAlert(lat, longit, true, prohibAreaStr);
+							//fenceObj.addProximityAlert(lat, longit);
+						}
+
+						catch(Exception e) {
+							String esd = e.getMessage();
+							Log.d("error", e.getMessage());
+						}
 					}
 				}
 			});
@@ -341,8 +458,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	public static class CurrLocFragment extends Fragment {
 
-		
-		
+
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {

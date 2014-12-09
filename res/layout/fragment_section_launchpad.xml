@@ -1,128 +1,131 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="69dp"
-	    android:orientation="horizontal"
-	    android:paddingLeft="30dp"
-	    android:paddingRight="30dp" >
-	    
-	    <TextView
-	        android:id="@+id/date"
-	        android:layout_width="140dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:text="@string/date" 
-	        android:textSize="25sp"/>
-	    
-	    <EditText
-        	android:id="@+id/selDate"
-        	android:layout_width="0dp"
-        	android:layout_height="wrap_content"
-        	android:layout_weight=".2"
-        	android:layout_marginTop="20dp" 
-        	android:hint="@string/date_hint"/>
+    android:layout_height="match_parent" >
 
-	</LinearLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="74dp"
-	    android:layout_marginTop="55dp"
-	    android:orientation="horizontal"
-	    android:paddingLeft="30dp"
-	    android:paddingRight="30dp" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-	    <TextView
-	        android:id="@+id/time1"
-	        android:layout_width="140dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:text="@string/startTime"
-	        android:textSize="25sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="59dp"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp" >
 
-	    <EditText
-	        android:id="@+id/startTime"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:layout_weight=".2"
-	        android:hint="@string/time_hint" >
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/date"
+                    android:textSize="25sp" />
 
-	        <requestFocus />
-	    </EditText>
-	</LinearLayout>
+                <EditText
+                    android:id="@+id/selDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/date_hint" />
+            </LinearLayout>
 
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="69dp"
-	    android:layout_marginTop="112dp"
-	    android:orientation="horizontal"
-	    android:paddingLeft="30dp"
-	    android:paddingRight="30dp" >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="59dp"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp" >
 
-	    <TextView
-	        android:id="@+id/time2"
-	        android:layout_width="140dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:text="@string/endTime"
-	        android:textSize="25sp" />
+                <TextView
+                    android:id="@+id/time1"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/startTime"
+                    android:textSize="25sp" />
 
-	    <EditText
-	        android:id="@+id/endTime"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:layout_weight=".2"
-	        android:hint="@string/time_hint" />
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="69dp"
-	    android:layout_marginTop="180dp"
-	    android:orientation="horizontal"
-	    android:paddingLeft="30dp"
-	    android:paddingRight="30dp" >
+                <EditText
+                    android:id="@+id/startTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/time_hint" >
+                </EditText>
+            </LinearLayout>
 
-	    <TextView
-	        android:id="@+id/location"
-	        android:layout_width="140dp"
-	        android:layout_height="match_parent"
-	        android:layout_marginTop="20dp"
-	        android:layout_weight="0.01"
-	        android:text="@string/location"
-	        android:textSize="20sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="59dp"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp" >
 
-	    <EditText
-	        android:id="@+id/loc"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:layout_weight=".2"
-	        android:hint="@string/loc_hint" />
-	</LinearLayout>
-	
-		<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="69dp"
-	    android:layout_marginTop="250dp"
-	    android:orientation="horizontal"
-	    android:paddingLeft="30dp"
-	    android:paddingRight="30dp" >
+                <TextView
+                    android:id="@+id/time2"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/endTime"
+                    android:textSize="25sp" />
 
-	    <Button
-	        android:id="@+id/submitBtn"
-	        android:layout_width="0dp"
-	        android:layout_height="match_parent"
-	        android:layout_marginTop="20dp"
-	        android:layout_weight="0.01"
-	        android:text="@string/submit"
-	        android:textSize="20sp" />
+                <EditText
+                    android:id="@+id/endTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/time_hint" />
+            </LinearLayout>
 
-	</LinearLayout>
-	
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp" >
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location"
+                    android:textSize="25sp" />
+
+                <EditText
+                    android:id="@+id/addr1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/addr1_hint" />
+
+                <EditText
+                    android:id="@+id/cityStateCode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/cityStateCode_hint" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/submitBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="80dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="0.01"
+                android:text="@string/submit"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
+
 </FrameLayout>
